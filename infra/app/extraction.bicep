@@ -2,6 +2,7 @@ param location string
 param tags object = {}
 param storageAccountName1 string
 param storageAccountName2 string
+param eventGridTopicName string
 
 module sa1 '../core/storage/storage-account.bicep' = {
   name: 'storageAccount1'
@@ -26,5 +27,15 @@ module sa2 '../core/storage/storage-account.bicep' = {
         name: 'doc-output'
       }
     ]
+  }
+}
+
+module eventgrid '../core/event/event-grid.bicep' = {
+  name: 'eventgrid'
+  params: {
+    eventGridTopicName: eventGridTopicName
+    location: location
+    tags: tags
+    storageAccountId: sa2.outputs.id
   }
 }
