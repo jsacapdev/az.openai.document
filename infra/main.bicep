@@ -32,7 +32,7 @@ resource rg 'Microsoft.Resources/resourceGroups@2022-09-01' = {
 }
 
 // monitoring
-module web './core/monitor/monitoring.bicep' = {
+module monitoring './core/monitor/monitoring.bicep' = {
   name: 'monitoring'
   scope: rg
   params: {
@@ -41,6 +41,18 @@ module web './core/monitor/monitoring.bicep' = {
     tags: tags
     applicationInsightsName: '${abbrs.insightsComponents}${productName}-${environmentName}-001'
     applicationInsightsDashboardName: '${abbrs.portalDashboards}${productName}-${environmentName}-001'
+  }
+}
+
+// text extraction
+module extraction './app/extraction.bicep' = {
+  name: 'extraction'
+  scope: rg
+  params: {
+    tags: tags
+    storageAccountName1: '${abbrs.storageStorageAccounts}${productName}${environmentName}001'
+    storageAccountName2: '${abbrs.storageStorageAccounts}${productName}${environmentName}002'
+    location: location
   }
 }
 
