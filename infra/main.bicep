@@ -54,8 +54,21 @@ module extraction './app/extraction.bicep' = {
     storageAccountName2: '${abbrs.storageStorageAccounts}${productName}${environmentName}002'
     eventGridTopicName: '${abbrs.eventGridDomainsTopics}${productName}${environmentName}001'
     location: location
+    cognitiveServicesName: '${abbrs.cognitiveServicesAccounts}${productName}-${environmentName}-001' 
   }
 }
+
+// transformation
+module transformation './app/transformation.bicep' = {
+  name: 'transformation'
+  scope: rg
+  params: {
+    tags: tags
+    location: location
+    cognitiveServicesName: '${abbrs.cognitiveServicesFormRecognizer}${productName}${environmentName}001' 
+  }
+}
+
 
 // Add outputs from the deployment here, if needed.
 //

@@ -1,8 +1,12 @@
 param location string
 param tags object = {}
+param cognitiveServicesName string
 param storageAccountName1 string
 param storageAccountName2 string
 param eventGridTopicName string
+
+param cognitiveServicesKind string = 'FormRecognizer'
+param formRecognizerSkuName string = 'S0'
 
 module sa1 '../core/storage/storage-account.bicep' = {
   name: 'storageAccount1'
@@ -30,12 +34,25 @@ module sa2 '../core/storage/storage-account.bicep' = {
   }
 }
 
-module eventgrid '../core/event/event-grid.bicep' = {
-  name: 'eventgrid'
-  params: {
-    eventGridTopicName: eventGridTopicName
-    location: location
-    tags: tags
-    storageAccountId: sa2.outputs.id
-  }
-}
+// module formRecognizer '../core/ai/cognative.bicep' = {
+//   name: 'formRecognizer'
+//   params: {
+//     cognitiveServicesName: cognitiveServicesName
+//     cognitiveServicesKind: cognitiveServicesKind
+//     location: location
+//     tags: tags
+//     sku: {
+//       name: formRecognizerSkuName
+//     }
+//   }
+// }
+
+// module eventgrid '../core/event/event-grid.bicep' = {
+//   name: 'eventgrid'
+//   params: {
+//     eventGridTopicName: eventGridTopicName
+//     location: location
+//     tags: tags
+//     storageAccountId: sa2.outputs.id
+//   }
+// }
