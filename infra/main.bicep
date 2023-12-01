@@ -54,7 +54,7 @@ module extraction './app/extraction.bicep' = {
     storageAccountName2: '${abbrs.storageStorageAccounts}${productName}${environmentName}002'
     eventGridTopicName: '${abbrs.eventGridDomainsTopics}${productName}${environmentName}001'
     location: location
-    cognitiveServicesName: '${abbrs.cognitiveServicesAccounts}${productName}-${environmentName}-001' 
+    cognitiveServicesName: '${abbrs.cognitiveServicesFormRecognizer}${productName}-${environmentName}-001' 
   }
 }
 
@@ -65,7 +65,7 @@ module transformation './app/transformation.bicep' = {
   params: {
     tags: tags
     location: location
-    cognitiveServicesName: '${abbrs.cognitiveServicesFormRecognizer}${productName}${environmentName}001' 
+    cognitiveServicesName: '${abbrs.cognitiveServicesAccounts}${productName}-${environmentName}-001' 
   }
 }
 
