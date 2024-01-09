@@ -1,7 +1,7 @@
 metadata description = 'Creates an Azure event grid topic.'
 param eventGridTopicName string
 param eventSubName string = 'document-created'
-param endpoint string = ''
+param endpoint string = 'https://b077-4-234-215-42.ngrok.io/runtime/webhooks/blobs?functionName=Host.Functions.DocumentCreatedTrigger'
 param location string = resourceGroup().location
 param tags object = {}
 param storageAccountId string

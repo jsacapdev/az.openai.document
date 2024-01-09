@@ -52,7 +52,7 @@ module extraction './app/extraction.bicep' = {
     tags: tags
     storageAccountName1: '${abbrs.storageStorageAccounts}${productName}${environmentName}001'
     storageAccountName2: '${abbrs.storageStorageAccounts}${productName}${environmentName}002'
-    eventGridTopicName: '${abbrs.eventGridDomainsTopics}${productName}${environmentName}001'
+    eventGridTopicName: '${abbrs.eventGridDomainsTopics}${productName}-${environmentName}-001'
     location: location
     cognitiveServicesName: '${abbrs.cognitiveServicesFormRecognizer}${productName}-${environmentName}-001' 
   }
