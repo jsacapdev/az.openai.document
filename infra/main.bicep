@@ -14,6 +14,9 @@ param productName string
 @description('Primary location for all resources')
 param location string
 
+@description('Id of the user or app to assign application roles')
+param principalId string = ''
+
 var abbrs = loadJsonContent('./abbreviations.json')
 
 // Tags that should be applied to all resources.
@@ -44,17 +47,61 @@ module monitoring './core/monitor/monitoring.bicep' = {
   }
 }
 
+// Store secrets in a keyvault
+module keyVault './core/security/keyvault.bicep' = {
+  name: 'keyvault'
+  scope: rg
+  params: {
+    name: '${abbrs.keyVaultVaults}${productName}-${environmentName}-001'
+    location: location
+    tags: tags
+    principalId: principalId
+  }
+}
+
+// Create an App Service Plan to group applications under the same payment plan and SKU
+module appServicePlan './core/host/appserviceplan.bicep' = {
+  name: 'appserviceplan'
+  scope: rg
+  params: {
+    name: '${abbrs.webServerFarms}${productName}-${environmentName}-001'
+    location: location
+    tags: tags
+    sku: {
+      name: 'Y1'
+      tier: 'Dynamic'
+    }
+  }
+}
+
 // text extraction
 module extraction './app/extraction.bicep' = {
   name: 'extraction'
   scope: rg
   params: {
     tags: tags
-    storageAccountName1: '${abbrs.storageStorageAccounts}${productName}${environmentName}001'
-    storageAccountName2: '${abbrs.storageStorageAccounts}${productName}${environmentName}002'
+    functionAppStorageAccountName: '${abbrs.storageStorageAccounts}${productName}${environmentName}001'
+    documentStorageAccountName: '${abbrs.storageStorageAccounts}${productName}${environmentName}002'
     eventGridTopicName: '${abbrs.eventGridDomainsTopics}${productName}-${environmentName}-001'
     location: location
-    cognitiveServicesName: '${abbrs.cognitiveServicesFormRecognizer}${productName}-${environmentName}-001' 
+    cognitiveServicesName: '${abbrs.cognitiveServicesFormRecognizer}${productName}-${environmentName}-001'
+    functionName: '${abbrs.webSitesFunctions}${productName}-${environmentName}-001'
+    appServicePlanId: appServicePlan.outputs.id
+    appSettings: {
+      AzureWebJobsFeatureFlags: 'EnableWorkerIndexing'
+    }
+    applicationInsightsName: monitoring.outputs.applicationInsightsName
+    keyVaultName: '${abbrs.keyVaultVaults}${productName}-${environmentName}-001'
+  }
+}
+
+// Give the API access to KeyVault
+module extractionKeyVaultAccess './core/security/keyvault-access.bicep' = {
+  name: 'extraction-keyvault-access'
+  scope: rg
+  params: {
+    keyVaultName: keyVault.outputs.name
+    principalId: extraction.outputs.SERVICE_FUNCTION_IDENTITY_PRINCIPAL_ID
   }
 }
 
@@ -65,10 +112,9 @@ module transformation './app/transformation.bicep' = {
   params: {
     tags: tags
     location: location
-    cognitiveServicesName: '${abbrs.cognitiveServicesAccounts}${productName}-${environmentName}-001' 
+    cognitiveServicesName: '${abbrs.cognitiveServicesAccounts}${productName}-${environmentName}-001'
   }
 }
-
 
 // Add outputs from the deployment here, if needed.
 //

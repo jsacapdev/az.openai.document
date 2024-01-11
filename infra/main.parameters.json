@@ -10,6 +10,9 @@
       },
       "productName": {
         "value": "${PRODUCT_NAME}"
+      },
+      "principalId": {
+        "value": "${AZURE_PRINCIPAL_ID}"
       }
     }
 }
