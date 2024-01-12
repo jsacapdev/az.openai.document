@@ -7,7 +7,8 @@ param applicationInsightsName string = ''
 param appServicePlanId string
 param keyVaultName string = ''
 param managedIdentity bool = !empty(keyVaultName)
-param storageAccountName string
+param functionStorageAccountName string
+param documentStorageAccountName string
 
 // Runtime Properties
 @allowed([
@@ -52,8 +53,8 @@ module functions 'appservice.bicep' = {
     applicationInsightsName: applicationInsightsName
     appServicePlanId: appServicePlanId
     appSettings: union(appSettings, {
-        AzureWebJobsStorage: 'DefaultEndpointsProtocol=https;AccountName=${storage.name};AccountKey=${storage.listKeys().keys[0].value};EndpointSuffix=${environment().suffixes.storage}'
-        blobstorage: 'DefaultEndpointsProtocol=https;AccountName=${storage.name};AccountKey=${storage.listKeys().keys[0].value};EndpointSuffix=${environment().suffixes.storage}'
+        AzureWebJobsStorage: 'DefaultEndpointsProtocol=https;AccountName=${functionStorage.name};AccountKey=${functionStorage.listKeys().keys[0].value};EndpointSuffix=${environment().suffixes.storage}'
+        AzureWebJobsblobstorage: 'DefaultEndpointsProtocol=https;AccountName=${documentStorage.name};AccountKey=${documentStorage.listKeys().keys[0].value};EndpointSuffix=${environment().suffixes.storage}'
         FUNCTIONS_EXTENSION_VERSION: extensionVersion
         FUNCTIONS_WORKER_RUNTIME: runtimeName
       })
@@ -74,8 +75,12 @@ module functions 'appservice.bicep' = {
   }
 }
 
-resource storage 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
-  name: storageAccountName
+resource functionStorage 'Microsoft.Storage/storageAccounts@2023-01-01' existing = {
+  name: functionStorageAccountName
+}
+
+resource documentStorage 'Microsoft.Storage/storageAccounts@2023-01-01' existing = {
+  name: documentStorageAccountName
 }
 
 output identityPrincipalId string = managedIdentity ? functions.outputs.identityPrincipalId : ''

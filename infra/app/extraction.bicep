@@ -75,7 +75,8 @@ module function '../core/host/functions.bicep' = {
     //--py
     runtimeName: 'python'
     runtimeVersion: '3.11'
-    storageAccountName: functionAppStorageAccountName
+    functionStorageAccountName: functionAppStorageAccountName
+    documentStorageAccountName: documentStorageAccountName
     scmDoBuildDuringDeployment: false
   }
 }
