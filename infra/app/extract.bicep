@@ -62,7 +62,7 @@ module function '../core/host/functions.bicep' = {
   params: {
     name: functionName
     location: location
-    tags: union(tags, { 'azd-service-name': functionName })
+    tags: union(tags, { 'azd-service-name': 'extract' }, { 'non-azd-service-name': functionName })
     allowedOrigins: allowedOrigins
     alwaysOn: false
     appSettings: appSettings

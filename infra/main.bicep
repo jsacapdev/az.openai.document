@@ -75,7 +75,7 @@ module appServicePlan './core/host/appserviceplan.bicep' = {
 }
 
 // text extraction
-module extraction './app/extraction.bicep' = {
+module extract './app/extract.bicep' = {
   name: 'extraction'
   scope: rg
   params: {
@@ -95,19 +95,19 @@ module extraction './app/extraction.bicep' = {
   }
 }
 
-// Give the API access to KeyVault
-module extractionKeyVaultAccess './core/security/keyvault-access.bicep' = {
-  name: 'extraction-keyvault-access'
+// Give the extract function access to KeyVault
+module extractKeyVaultAccess './core/security/keyvault-access.bicep' = {
+  name: 'extract-keyvault-access'
   scope: rg
   params: {
     keyVaultName: keyVault.outputs.name
-    principalId: extraction.outputs.SERVICE_FUNCTION_IDENTITY_PRINCIPAL_ID
+    principalId: extract.outputs.SERVICE_FUNCTION_IDENTITY_PRINCIPAL_ID
   }
 }
 
-// transformation
-module transformation './app/transformation.bicep' = {
-  name: 'transformation'
+// transform
+module transform './app/transform.bicep' = {
+  name: 'transform'
   scope: rg
   params: {
     tags: tags
