@@ -15,10 +15,6 @@ permissions:
   id-token: write
   contents: read
 
-env:
-  AZURE_ENV_NAME: dev
-  AZURE_LOCATION: uksouth
-
 jobs:
   build:
     runs-on: ubuntu-latest
