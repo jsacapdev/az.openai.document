@@ -52,6 +52,7 @@ jobs:
           AZURE_ENV_NAME: ${{ vars.AZURE_ENV_NAME }}
           AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          PRODUCT_NAME: ${{ vars.PRODUCT_NAME }}
 
       - name: Deploy Application
         run: azd deploy --no-prompt
