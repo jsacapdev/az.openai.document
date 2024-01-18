@@ -15,6 +15,9 @@ permissions:
   id-token: write
   contents: read
 
+env:
+  AZURE_DEV_COLLECT_TELEMETRY: no
+
 jobs:
   build:
     runs-on: ubuntu-latest
