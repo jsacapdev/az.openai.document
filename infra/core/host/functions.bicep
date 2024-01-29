@@ -53,8 +53,8 @@ module functions 'appservice.bicep' = {
     applicationInsightsName: applicationInsightsName
     appServicePlanId: appServicePlanId
     appSettings: union(appSettings, {
-        AzureWebJobsStorage: 'DefaultEndpointsProtocol=https;AccountName=${functionStorage.name};AccountKey=${functionStorage.listKeys().keys[0].value};EndpointSuffix=${environment().suffixes.storage}'
-        AzureWebJobsblobstorage__serviceUri: documentStorage.properties.primaryEndpoints.blob
+        AzureWebJobsStorage__accountName: functionStorage.name
+        AzureWebJobsblobstorage__accountName: documentStorage.name
         FUNCTIONS_EXTENSION_VERSION: extensionVersion
         FUNCTIONS_WORKER_RUNTIME: runtimeName
       })

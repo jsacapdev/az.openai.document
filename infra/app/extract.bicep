@@ -64,7 +64,7 @@ module function '../core/host/functions.bicep' = {
     location: location
     tags: union(tags, { 'azd-service-name': 'extract' }, { 'non-azd-service-name': functionName })
     allowedOrigins: allowedOrigins
-    alwaysOn: false
+    alwaysOn: true
     appSettings: appSettings
     applicationInsightsName: applicationInsightsName
     appServicePlanId: appServicePlanId
