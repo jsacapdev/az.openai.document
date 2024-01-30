@@ -5,9 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "python",
+            "type": "python",
+            "request": "launch",
+            "program": "scripts/blob_update.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
             "type": "bashdb",
             "request": "launch",
-            "name": "Bash-Debug (simplest configuration)",
+            "name": "bash",
             "program": "scripts/blob_update.sh"
         }
     ]

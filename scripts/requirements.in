@@ -1,1 +1,5 @@
 asyncio
+azure-identity
+azure-mgmt-authorization
+azure-mgmt-resource
+python-dotenv

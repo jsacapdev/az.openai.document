@@ -8,11 +8,11 @@ services:
     project: ./src/extract
     language: python
     host: function
-hooks:
-    postprovision:
-      posix:
-        shell: sh
-        run: ./scripts/blob_update.sh;
-        interactive: true
-        continueOnError: false
+# hooks:
+#     postprovision:
+#       posix:
+#         shell: sh
+#         run: ./scripts/blob_update.sh;
+#         interactive: true
+#         continueOnError: false
 
