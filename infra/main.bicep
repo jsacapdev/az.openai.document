@@ -1,4 +1,4 @@
-targetScope = 'subscription'
+targetScope = 'resourceGroup'
 
 @minLength(1)
 @maxLength(10)
@@ -20,24 +20,13 @@ param principalId string
 var abbrs = loadJsonContent('./abbreviations.json')
 
 // Tags that should be applied to all resources.
-// 
-// Note that 'azd-service-name' tags should be applied separately to service host resources.
-// Example usage:
-//   tags: union(tags, { 'azd-service-name': <service name in azure.yaml> })
 var tags = {
   'azd-env-name': environmentName
-}
-
-resource rg 'Microsoft.Resources/resourceGroups@2022-09-01' = {
-  name: '${abbrs.resourcesResourceGroups}${productName}-${environmentName}-001'
-  location: location
-  tags: tags
 }
 
 // monitoring
 module monitoring './core/monitor/monitoring.bicep' = {
   name: 'monitoring'
-  scope: rg
   params: {
     logAnalyticsName: '${abbrs.operationalInsightsWorkspaces}${productName}-${environmentName}-001'
     location: location
@@ -50,7 +39,6 @@ module monitoring './core/monitor/monitoring.bicep' = {
 // Store secrets in a keyvault
 module keyVault './core/security/keyvault.bicep' = {
   name: 'keyvault'
-  scope: rg
   params: {
     name: '${abbrs.keyVaultVaults}${productName}-${environmentName}-001'
     location: location
@@ -62,7 +50,6 @@ module keyVault './core/security/keyvault.bicep' = {
 // Create an App Service Plan to group applications under the same payment plan and SKU
 module appServicePlan './core/host/appserviceplan.bicep' = {
   name: 'appserviceplan'
-  scope: rg
   params: {
     name: '${abbrs.webServerFarms}${productName}-${environmentName}-001'
     location: location
@@ -77,7 +64,6 @@ module appServicePlan './core/host/appserviceplan.bicep' = {
 // text extraction
 module extract './app/extract.bicep' = {
   name: 'extraction'
-  scope: rg
   params: {
     tags: tags
     functionAppStorageAccountName: '${abbrs.storageStorageAccounts}${productName}${environmentName}001'
@@ -98,7 +84,6 @@ module extract './app/extract.bicep' = {
 // Give the extract function access to KeyVault
 module extractKeyVaultAccess './core/security/keyvault-access.bicep' = {
   name: 'extract-keyvault-access'
-  scope: rg
   params: {
     keyVaultName: keyVault.outputs.name
     principalId: extract.outputs.SERVICE_FUNCTION_IDENTITY_PRINCIPAL_ID
@@ -108,7 +93,6 @@ module extractKeyVaultAccess './core/security/keyvault-access.bicep' = {
 // transform
 module transform './app/transform.bicep' = {
   name: 'transform'
-  scope: rg
   params: {
     tags: tags
     location: location
